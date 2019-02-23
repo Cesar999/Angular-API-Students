@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {HttpServiceService} from '../http-service.service';
 import { AuthServiceService } from '../auth-service.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,11 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  constructor(private httpService: HttpServiceService, private authService: AuthServiceService, private router: Router) { }
+  constructor(
+    private httpService: HttpServiceService,
+     private authService: AuthServiceService,
+     private router: Router,
+     private store: Store<any>) { }
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -21,28 +26,19 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.loginForm);
-    console.log(this.loginForm.value);
+    // console.log(this.loginForm);
+    // console.log(this.loginForm.value);
     this.httpService.postLogin(this.loginForm.value)
     .subscribe(
       (response) => {
-        console.log(response);
+        // console.log(response);
         if (response['flag']) {
-          this.router.navigate(['/dashboard']);
+          this.authService.toAuthenticate(response['type']);
         }
       },
       (error) => console.log(error)
     );
   }
 
-  getSecret() {
-    this.httpService.getSecret()
-    .subscribe(
-      (response) => {
-        console.log(response);
-      },
-      (error) => console.log(error)
-    );
-  }
 
 }

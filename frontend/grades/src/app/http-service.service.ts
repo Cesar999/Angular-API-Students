@@ -22,8 +22,8 @@ export class HttpServiceService {
   return this.http.post('http://localhost:3000/register', user);
 }
 
-getSecret() {
-  return this.http.get('http://localhost:3001/secret',
+getSecret(type) {
+  return this.http.post('http://localhost:3001/secret', {type},
   {withCredentials: true});
 }
 

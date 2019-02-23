@@ -13,11 +13,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { generalReducer } from './state/general.reducer';
 
+import { AuthGuardService as AuthGuard } from './guards/auth-guard.service';
+
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
-  { path: 'dashboard', component: DashboardComponent},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   { path: '**', component: LoginComponent }
 ];
 

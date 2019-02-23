@@ -9,7 +9,7 @@ const passport = require("passport");
 const passportJWT = require("passport-jwt");
 
 //Mongoose
-mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-auth');
+mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-auth', { useNewUrlParser: true });
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: {type: String, required: true},
@@ -23,7 +23,7 @@ const User = mongoose.model('user',userSchema);
 const app = express();
 const port = process.env.PORT || 3000;
 app.listen(port,()=>{
-    console.log(`Listening port ${port}`);
+    console.log(`Listening port ${port} Auth`);
 });
 
 app.use(bodyParser.json());
@@ -41,27 +41,48 @@ let cookieExtractor = function(req) {
   return token;
 };
 
-const jwtOptions = {}
-jwtOptions.jwtFromRequest = cookieExtractor;
-jwtOptions.secretOrKey = 'mySecret';
+const jwtOptions_students = {}
+jwtOptions_students.jwtFromRequest = cookieExtractor;
+jwtOptions_students.secretOrKey = 'mySecretStudent';
 
-const strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
-  console.log('payload received', jwt_payload);
+const jwtOptions_professors= {}
+jwtOptions_professors.jwtFromRequest = cookieExtractor;
+jwtOptions_professors.secretOrKey = 'mySecretProfessor';
 
-  User.findOne({username: jwt_payload.username, _id: jwt_payload._id})
+
+const strategy_student = new JwtStrategy(jwtOptions_students, function(jwt_payload, next) {
+  //console.log('payload received', jwt_payload);
+  User.findOne({username: jwt_payload.username, _id: jwt_payload._id, type:jwt_payload.type})
   .then((user) => {
-      if (user) {
+      if (user.type==='student') {
+          //console.log('yes',user);
           next(null, user);
         } else {
+          //console.log('not',user);
           next(null, false);
         }
   })
   .catch(() => console.log('Payload Cacth'));
 });
 
-passport.use(strategy);
-app.use(passport.initialize());
+const strategy_professor = new JwtStrategy(jwtOptions_professors, function(jwt_payload, next) {
+  //console.log('payload received', jwt_payload);
+  User.findOne({username: jwt_payload.username, _id: jwt_payload._id, type:jwt_payload.type})
+  .then((user) => {
+      if (user.type==='professor') {
+          //console.log('yes',user);
+          next(null, user);
+        } else {
+          //console.log('not',user);
+          next(null, false);
+        }
+  })
+  .catch(() => console.log('Payload Cacth'));
+});
 
+passport.use('student',strategy_student);
+passport.use('professor',strategy_professor);
+app.use(passport.initialize());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -82,10 +103,20 @@ app.post('/login', (req, res) => {
         res.send({msg: 'User does not exist'});
       }
       else if(user.password === pass){
-        const payload = {username: user.username, _id: user._id};
-        const token = jwt.sign(payload, jwtOptions.secretOrKey,  {expiresIn: '36000s'});
-        res.cookie('token', token, { maxAge: 900000, httpOnly: true });
-        res.send({msg: 'Succesfully Login', flag: true});
+        const payload = {username: user.username, _id: user._id, type: user.type};
+
+        if(user.type==='student'){
+          const token = jwt.sign(payload, jwtOptions_students.secretOrKey,  {expiresIn: '36000s'});
+          res.cookie('token', token, { maxAge: 900000, httpOnly: true });
+          res.send({msg: 'Succesfully Login', flag: true, type: user.type});
+        } else if(user.type==='professor'){
+          const token = jwt.sign(payload, jwtOptions_professors.secretOrKey,  {expiresIn: '36000s'});
+          res.cookie('token', token, { maxAge: 900000, httpOnly: true });
+          res.send({msg: 'Succesfully Login', flag: true, type: user.type});
+        } else {
+          res.send({msg: 'Not An User'});
+        }
+
       }
       else {
         res.send({msg: 'Wrong password'});
@@ -99,7 +130,7 @@ app.post('/register', (req, res) => {
     const pass = req.body.password;
     const type = req.body.type;
 
-    console.log(req.body);
+    //console.log(req.body);
     User.findOne({username: name})
     .then((user)=>{
         if(user){
@@ -122,7 +153,12 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.get('/secret', passport.authenticate('jwt', {session: false}), (req, res) => {
-  console.log('Secret Accessed');
-res.send({message: `Success! You can not see this without a token`, validate: true});
+app.get('/secret-student', passport.authenticate('student', {session: false}), (req, res) => {
+  console.log('Secret Student Accessed');
+  res.send({message: `Success! Student!`, validate: true, type: 'student'});
+});
+
+app.get('/secret-professor', passport.authenticate('professor', {session: false}), (req, res) => {
+  console.log('Secret Professor Accessed');
+  res.send({message: `Success! Professor!`, validate: true, type: 'professor'});
 });

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpServiceService } from '../http-service.service';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,42 +11,10 @@ import { Store } from '@ngrx/store';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private httpService: HttpServiceService, private store: Store<any>) { }
+  constructor(private httpService: HttpServiceService, private store: Store<any>, private router: Router) { }
 
   ngOnInit() {
-    this.httpService.getSecret()
-    .subscribe(
-      (response) => {
-        console.log('response', response);
-        if (response['validate']) {
-          console.log('Validated');
-          this.storeState();
-        } else {
-          console.log('No Validated');
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
 
-  storeState() {
-    // this.store.select('applicationState')
-    //   .subscribe(
-    //     state => {
-    //     if (state) {
-    //       this.num1 = state.from1_num1;
-    //       this.num2 = state.from1_num2;
-    //     }
-    //   });
   }
-
-  // num1Changed() {
-  //   this.store.dispatch({
-  //     type: 'FORM1_NUM1',
-  //     payload: this.num1
-  //   });
-  // }
 
 }

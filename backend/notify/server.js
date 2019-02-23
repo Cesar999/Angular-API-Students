@@ -10,25 +10,25 @@ const fetch = require('node-fetch');
 const app = express();
 const port = process.env.PORT || 3001;
 app.listen(port,()=>{
-    console.log(`Listening port ${port}`);
+    console.log(`Listening port ${port} Notify`);
 });
 
 app.use(bodyParser.json());
 app.use(cookieParser());
 
 //Mongoose
-mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-notify');
+mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-notify', { useNewUrlParser: true });
 const Schema = mongoose.Schema;
 const studentSchema = new Schema({
     username: {type: String, required: true},
     type: {type: String, required: true},
 });
-const profesorSchema = new Schema({
+const professorSchema = new Schema({
     username: {type: String, required: true},
     type: {type: String, required: true},
 });
 const Student = mongoose.model('student',studentSchema);
-const Profesor = mongoose.model('profesor',profesorSchema);
+const Professor = mongoose.model('professor',professorSchema);
 
 //Routes
 app.use((req, res, next) => {
@@ -40,14 +40,14 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/secret', (req, res) => {
+app.post('/secret', (req, res) => {
     const opts = {
         headers: {
             cookie: `token=${req.cookies['token']}`
         }
     };
-    fetch('http://localhost:3000/secret', opts)
-    .then(res => res.json())
+    fetch(`http://localhost:3000/secret-${req.body.type}`, opts)
+    .then(res => res.text())
     .then(json => {
         console.log(json);
       res.send(json);
