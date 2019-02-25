@@ -7,6 +7,14 @@ interface User {
   type?: String;
 }
 
+interface Class {
+  name: String;
+  starts: Number;
+  ends: Number;
+  days: String;
+  capacity: Number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,14 +26,18 @@ export class HttpServiceService {
     return this.http.post('http://localhost:3000/login', user, {withCredentials: true});
  }
 
- postRegister(user: User) {
-  return this.http.post('http://localhost:3000/register', user);
-}
+ postRegister(user: User){
+    return this.http.post('http://localhost:3000/register', user);
+  }
 
-getSecret(type) {
-  return this.http.post('http://localhost:3001/secret', {type},
-  {withCredentials: true});
-}
+  getSecret(type) {
+    return this.http.post('http://localhost:3001/secret', {type},
+    {withCredentials: true});
+  }
+
+  createClass(_class: Class) {
+    return this.http.post('http://localhost:3001/create-class', _class, {withCredentials: true});
+ }
 
 
 }

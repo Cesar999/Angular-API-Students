@@ -27,8 +27,21 @@ const professorSchema = new Schema({
     username: {type: String, required: true},
     type: {type: String, required: true},
 });
-const Student = mongoose.model('student',studentSchema);
-const Professor = mongoose.model('professor',professorSchema);
+const classSchema = new Schema({
+    name: {type: String, required: true},
+    starts: {type: Number, required: true},
+    ends: {type: Number, required: true},
+    days: {type: String, required: true},
+    capacity: {type: Number, required: true},
+    professor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Profesor'
+    }
+});
+
+const Student = mongoose.model('Student',studentSchema);
+const Professor = mongoose.model('Professor',professorSchema);
+const Class = mongoose.model('Class',classSchema);
 
 //Routes
 app.use((req, res, next) => {
@@ -56,3 +69,60 @@ app.post('/secret', (req, res) => {
         console.log(e);
     });
 });
+
+app.post('/store-user', (req, res) => {
+    if(req.body.type==='student'){
+        const user1 = new Student({...req.body});
+        user1.save()
+        .then((u)=>{
+            //console.log(u);
+            res.send({msg: 'User saved'});
+        });
+    } else if(req.body.type==='professor'){
+        const user1 = new Professor({...req.body});
+        user1.save()
+        .then((u)=>{
+            //console.log(u);
+            res.send({msg: 'User saved'});
+        });
+    } else {
+        //console.log(req.body);
+    }
+});
+
+function validatePofessor(req, res, next){
+    const opts = {
+        headers: {
+            cookie: `token=${req.cookies['token']}`
+        }
+    };
+    //console.log(req.cookies)
+    fetch(`http://localhost:3000/secret-professor`, opts)
+    .then(res => res.json())
+    .then(json => {
+        //console.log(json);
+        if(json['validate']){
+            //console.log(req.body)
+            req.body.professor = json['user'];
+            next(null);
+        }
+    })
+    .catch((e)=>{
+        console.log(e.type);
+        if(e.type==='invalid-json'){
+            res.send({msg: 'Unauthorized'});
+        }
+    });
+}
+
+app.post('/create-class',validatePofessor,(req, res) => {
+    //console.log(req.body);
+    const class1 = new Class({...req.body});
+    class1.professor = mongoose.Types.ObjectId(class1.professor);
+    class1.save()
+    .then((u)=>{
+        //console.log(u);
+        res.send({msg: 'Class saved'});
+    });
+});
+

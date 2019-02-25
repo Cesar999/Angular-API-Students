@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken');
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 
+const fetch = require('node-fetch');
+
 //Mongoose
 mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-auth', { useNewUrlParser: true });
 const Schema = mongoose.Schema;
@@ -74,7 +76,7 @@ const strategy_professor = new JwtStrategy(jwtOptions_professors, function(jwt_p
           next(null, user);
         } else {
           //console.log('not',user);
-          next(null, false);
+          next(null, 'false');
         }
   })
   .catch(() => console.log('Payload Cacth'));
@@ -84,6 +86,23 @@ passport.use('student',strategy_student);
 passport.use('professor',strategy_professor);
 app.use(passport.initialize());
 
+//Functions
+function sendUser(body){
+    fetch('http://localhost:3001/store-user', {
+      method: 'post',
+      body:    JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
+  })
+  .then(res => res.json())
+  .then(json => {
+    //console.log(json)
+  })
+  .catch((e)=>{console.log('error sendUser')});
+}
+
+
+
+//Routes
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, authorization');
@@ -144,7 +163,9 @@ app.post('/register', (req, res) => {
             return user1.save();
         }
     })
-    .then(()=>{
+    .then((u)=>{
+        user = {username: u.username, _id: u._id, type: u.type};
+        sendUser(user);
         res.send({msg: 'Registration Successfully'});
     })
     .catch(() => {
@@ -155,10 +176,11 @@ app.post('/register', (req, res) => {
 
 app.get('/secret-student', passport.authenticate('student', {session: false}), (req, res) => {
   console.log('Secret Student Accessed');
-  res.send({message: `Success! Student!`, validate: true, type: 'student'});
+  res.send({message: `Success! Student!`, validate: true, type: req.user.type,  user: req.user._id});
 });
 
 app.get('/secret-professor', passport.authenticate('professor', {session: false}), (req, res) => {
   console.log('Secret Professor Accessed');
-  res.send({message: `Success! Professor!`, validate: true, type: 'professor'});
+  console.log(req.user);
+  res.send({message: `Success! Professor!`, validate: true, type: req.user.type, user: req.user._id});
 });

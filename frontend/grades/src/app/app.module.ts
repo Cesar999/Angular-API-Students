@@ -14,6 +14,7 @@ import { StoreModule } from '@ngrx/store';
 import { generalReducer } from './state/general.reducer';
 
 import { AuthGuardService as AuthGuard } from './guards/auth-guard.service';
+import { CreateClassComponent } from './dashboard/create-class/create-class.component';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -28,7 +29,8 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    DashboardComponent
+    DashboardComponent,
+    CreateClassComponent
   ],
   imports: [
     BrowserModule,
