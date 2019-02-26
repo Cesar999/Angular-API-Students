@@ -39,5 +39,16 @@ export class HttpServiceService {
     return this.http.post('http://localhost:3001/create-class', _class, {withCredentials: true});
  }
 
+ subsClass(_class: any) {
+  return this.http.post('http://localhost:3001/subs-class', _class, {withCredentials: true});
+}
+
+  loadClass() {
+    return this.http.get('http://localhost:3001/load-classes', {withCredentials: true});
+  }
+
+  getGrades() {
+    return this.http.get('http://localhost:3001/get-grades', {withCredentials: true});
+  }
 
 }

@@ -1,0 +1,24 @@
+<h1>
+  subs-class works!
+</h1>
+
+<div class="subs-class-form">
+    <h1>Create Class</h1>
+    <form [formGroup]="subsClassForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="class">Choose Week's Days</label>
+        <select id="class" formControlName="class" (change)="populateCard()" >
+          <option *ngFor="let c of classes" [value]="c._id">{{c.name}}</option>
+        </select>
+      </div>
+      <div>
+        <div><span>Name: </span>    <span>{{cardName}}</span></div>
+        <div><span>Starts: </span>  <span>{{cardStarts}}</span></div>
+        <div><span>Ends: </span>    <span>{{cardEnds}}</span></div>
+        <div><span>Days: </span>    <span>{{cardDays}}</span></div>
+        <div><span>Capacity: </span>  <span>{{cardCapacity}}</span></div>
+        <div><span>Professor: </span> <span>{{cardProfessor}}</span></div>
+      </div>
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+  </div>

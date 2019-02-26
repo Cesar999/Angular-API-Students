@@ -15,12 +15,28 @@ import { generalReducer } from './state/general.reducer';
 
 import { AuthGuardService as AuthGuard } from './guards/auth-guard.service';
 import { CreateClassComponent } from './dashboard/create-class/create-class.component';
+import { SetGradeComponent } from './dashboard/set-grade/set-grade.component';
+import { HomeDashboardComponent } from './dashboard/home-dashboard/home-dashboard.component';
+import { SubsClassComponent } from './dashboard/subs-class/subs-class.component';
+import { GetGradesComponent } from './dashboard/get-grades/get-grades.component';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+  { path: 'dashboard', component: DashboardComponent,
+  children: [
+    {
+      path: '',
+      children: [
+        { path: 'create-class', component: CreateClassComponent },
+        { path: 'set-grade', component: SetGradeComponent },
+        { path: 'subs-class', component: SubsClassComponent  },
+        { path: 'get-grades', component: GetGradesComponent },
+        { path: '**', component: HomeDashboardComponent}
+      ]
+    }
+  ], canActivate: [AuthGuard]},
   { path: '**', component: LoginComponent }
 ];
 
@@ -30,7 +46,11 @@ const appRoutes: Routes = [
     LoginComponent,
     RegisterComponent,
     DashboardComponent,
-    CreateClassComponent
+    CreateClassComponent,
+    SetGradeComponent,
+    HomeDashboardComponent,
+    SubsClassComponent,
+    GetGradesComponent
   ],
   imports: [
     BrowserModule,

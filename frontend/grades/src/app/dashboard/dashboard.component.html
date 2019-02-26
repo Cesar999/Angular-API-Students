@@ -1,4 +1,17 @@
 <h1>
   dashboard works!
 </h1>
-<app-create-class></app-create-class>
+<hr>
+<nav *ngIf="isProfessor">
+  <a routerLink="./home-dash" routerLinkActive="active">Home</a>&nbsp;
+  <a routerLink="./create-class" routerLinkActive="active">Create a Class</a>&nbsp;
+  <a routerLink="./set-grade" routerLinkActive="active">Set a Grade</a>&nbsp;
+</nav>
+<hr>
+<nav *ngIf="isStudent">
+    <a routerLink="./home-dash" routerLinkActive="active">Home</a>&nbsp;
+    <a routerLink="./subs-class" routerLinkActive="active">Subscribe to  a Class</a>&nbsp;
+    <a routerLink="./get-grades" routerLinkActive="active">Get Grades</a>&nbsp;
+  </nav>
+<hr>
+<router-outlet></router-outlet>
