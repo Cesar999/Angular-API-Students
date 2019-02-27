@@ -205,15 +205,14 @@ app.post('/subs-class',validateStudent,(req, res) => {
     let arr_classes = [];
 
     let msg = "Subscription Succesfully";
-    
+    // { _id: { $ne: class_id } },
 //----------------------------------------------------------
     Class.findOne({_id: class_id })
     .then((c)=>{
-        //console.log(c);
-        return Class.find({$and: [{starts: {$in: [c.starts]}}, {days: {$in: [c.days]}} ]})
+        return Class.find({$and: [ {starts: {$in: [c.starts]}}, {days: {$in: [c.days]}}, {students: {$in: [student_id]}}]})
     })
     .then((cs)=>{
-        //console.log(cs);
+        console.log(cs);
         if(cs.length<1){
             return Class.findOne({_id: class_id });
         } else {
@@ -251,7 +250,7 @@ app.post('/subs-class',validateStudent,(req, res) => {
       res.send({msg:msg});
     })
     .catch((e)=>{
-        console.log('Error');
+        console.log(e.message);
         res.send({msg:'Overlapping Class'});
     });
 });
@@ -341,6 +340,11 @@ app.post('/set-grade',validatePofessor,(req, res) => {
 app.get('/get-schedule',validatePofessor,(req, res) => {
     const professor_id = req.body.professor;
     Class.find({professor:{$in:req.body.professor}})
+    .populate({
+        path: 'professor',
+        select: 'username _id',
+        model: 'Professor'
+      })
     .then((c)=>{
         res.send({msg: c});
     })

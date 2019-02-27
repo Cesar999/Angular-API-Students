@@ -36,7 +36,6 @@ export class SetGradeComponent implements OnInit {
       },
       (error) => console.log(error)
     );
-
   }
 
   populateCard() {

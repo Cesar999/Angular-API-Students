@@ -10,49 +10,33 @@
             <th><button class="btn btn-primary">Fri</button></th>
         </thead>
         <tbody id="tbody">
-            <tr *ngFor="let c of classes">
-              <td><span>{{c.starts}}</span></td>
-
+            <tr *ngFor="let e of elements">
+              <td><span>{{e.h}}</span></td>
               <td>
-                <span *ngIf="c.Mon">
-                    <div class="name">{{c.name}}</div>
-                    <div *ngIf="c.professor.username"
-                    class="prof">Prof. {{c.professor.username}}</div>
-                </span>
+                <span class="name">{{e.mon.name}}</span>
+                <br>
+                <span class="prof">{{e.mon.prof}}</span>
               </td>
-
               <td>
-                <span *ngIf="c.Tue">
-                    <div class="name">{{c.name}}</div>
-                    <div *ngIf="c.professor.username"
-                    class="prof">Prof. {{c.professor.username}}</div>
-                </span>
+                <span class="name">{{e.tue.name}}</span>
+                <br>
+                <span class="prof">{{e.tue.prof}}</span>
               </td>
-
               <td>
-                <span *ngIf="c.Wed">
-                    <div class="name">{{c.name}}</div>
-                    <div *ngIf="c.professor.username"
-                    class="prof">Prof. {{c.professor.username}}</div>
-                </span>
+                <span class="name">{{e.wed.name}}</span>
+                <br>
+                <span class="prof">{{e.wed.prof}}</span>
               </td>
-
               <td>
-                <span *ngIf="c.Thu">
-                    <div class="name">{{c.name}}</div>
-                    <div *ngIf="c.professor.username"
-                    class="prof">Prof. {{c.professor.username}}</div>
-                </span>
+                <span class="name">{{e.thu.name}}</span>
+                <br>
+                <span class="prof">{{e.thu.prof}}</span>
               </td>
-
               <td>
-                <span *ngIf="c.Fri">
-                    <div class="name">{{c.name}}</div>
-                    <div *ngIf="c.professor.username"
-                    class="prof">Prof. {{c.professor.username}}</div>
-                </span>
+                <span class="name">{{e.fri.name}}</span>
+                <br>
+                <span class="prof">{{e.fri.prof}}</span>
               </td>
-
             </tr>
         </tbody>
         <tfoot>

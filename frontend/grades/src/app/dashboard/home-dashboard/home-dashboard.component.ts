@@ -8,20 +8,41 @@ import { Store } from '@ngrx/store';
 })
 export class HomeDashboardComponent implements OnInit {
   classes = [];
+
+  elements = [
+    {h: 8, mon: {name: '', prof: ''}, tue: {name: '', prof: ''},
+    wed: {name: '', prof: ''}, thu: {name: '', prof: ''}, fri: {name: '', prof: ''}},
+
+    {h: 9, mon: {name: '', prof: ''}, tue: {name: '', prof: ''},
+    wed: {name: '', prof: ''}, thu: {name: '', prof: ''}, fri: {name: '', prof: ''}},
+
+    {h: 10, mon: {name: '', prof: ''}, tue: {name: '', prof: ''},
+    wed: {name: '', prof: ''}, thu: {name: '', prof: ''}, fri: {name: '', prof: ''}},
+
+    {h: 11, mon: {name: '', prof: ''}, tue: {name: '', prof: ''},
+    wed: {name: '', prof: ''}, thu: {name: '', prof: ''}, fri: {name: '', prof: ''}},
+
+    {h: 12, mon: {name: '', prof: ''}, tue: {name: '', prof: ''},
+    wed: {name: '', prof: ''}, thu: {name: '', prof: ''}, fri: {name: '', prof: ''}},
+
+    {h: 13, mon: {name: '', prof: ''}, tue: {name: '', prof: ''},
+    wed: {name: '', prof: ''}, thu: {name: '', prof: ''}, fri: {name: '', prof: ''}},
+  ];
+
   constructor(private httpService: HttpServiceService, private store: Store<any>) { }
 
   ngOnInit() {
     this.store.select('applicationState')
     .subscribe(
         state => {
-          console.log(state);
+          // console.log(state);
         if (state.type === 'student') {
           this.httpService.getScheduleStudent()
           .subscribe(
             (response) => {
-               console.log(response);
-               if (response.msg) {
-                 this.leanClasses(response.msg);
+               // console.log(response);
+               if (response['msg']) {
+                  this.leanClasses(response['msg']);
                }
             },
             (error) => console.log(error)
@@ -30,9 +51,9 @@ export class HomeDashboardComponent implements OnInit {
           this.httpService.getSchedule()
           .subscribe(
             (response) => {
-               console.log(response);
-               if (response.msg) {
-                 this.leanClasses(response.msg);
+               // console.log(response);
+               if (response['msg']) {
+                 this.leanClasses(response['msg']);
                }
             },
             (error) => console.log(error)
@@ -45,43 +66,47 @@ export class HomeDashboardComponent implements OnInit {
   }
 
   leanClasses(arr) {
-    if (arr) {
-      const hours = {
-        '8': true,
-        '9': true,
-        '10': true,
-        '11': true,
-        '12': true,
-        '13': true,
-      };
-
-      const output = [];
-      for (const a of arr) {
-          const obj = {};
-          obj = {...a};
-          if (a.days) {
-            const days_arr = a.days.split('-');
-            for (const d of days_arr) {
-                obj[d] = true;
-            }
-          }
-          hours[a.starts] = false;
-          output.push(obj);
+    const obj_arr = [];
+    for (const a of arr) {
+      if (a.days) {
+        const temp = a.days.split('-');
+        const obj = {...a};
+        for (const d of temp) {
+          obj[d] = true;
+        }
+        // console.log(obj);
+        obj_arr.push(obj);
       }
+    }
 
-      for (const k in hours) {
-        if (hours[k]) {
-          output.push({starts: k});
+   for (const a of obj_arr) {
+     // console.log(a);
+      for (const e of this.elements) {
+        if (e.h === a.starts) {
+          if (a.Mon) {
+            e.mon.name = a.name;
+            e.mon.prof = `Prof. ${a.professor.username}`;
+          }
+          if (a.Tue) {
+            e.tue.name = a.name;
+            e.tue.prof = `Prof. ${a.professor.username}`;
+          }
+          if (a.Wed) {
+            e.wed.name = a.name;
+            e.wed.prof = `Prof. ${a.professor.username}`;
+          }
+          if (a.Thu) {
+            e.thu.name = a.name;
+            e.thu.prof = `Prof. ${a.professor.username}`;
+          }
+          if (a.Fri) {
+            e.fri.name = a.name;
+            e.fri.prof = `Prof. ${a.professor.username}`;
+          }
         }
       }
+   }
 
-      output.sort(function(a, b){
-        return a.starts - b.starts;
-      });
-
-      console.log(output);
-      this.classes = output;
-    }
   }
 
 }

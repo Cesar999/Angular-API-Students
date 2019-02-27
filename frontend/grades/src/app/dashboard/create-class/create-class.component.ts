@@ -31,8 +31,8 @@ export class CreateClassComponent implements OnInit {
          console.log(response);
          this.createClassForm.reset();
 
-         if (response.msg) {
-          this.message = response.msg;
+         if (response['msg']) {
+          this.message = response['msg'];
           setTimeout(() => {
             this.message = '';
           }, 2000);

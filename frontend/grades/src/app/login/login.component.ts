@@ -33,8 +33,8 @@ export class LoginComponent implements OnInit {
     .subscribe(
       (response) => {
         console.log(response);
-        if (response.msg) {
-          this.message = response.msg;
+        if (response['msg']) {
+          this.message = response['msg'];
         }
 
         if (response['flag']) {

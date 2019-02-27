@@ -29,8 +29,8 @@ onSubmit() {
   .subscribe(
     (response) => {
       console.log(response);
-      if(response.msg){
-        this.message = response.msg;
+      if(response['msg']){
+        this.message = response['msg'];
       }
 
       if (response['msg'] === 'Registration Successfully') {
