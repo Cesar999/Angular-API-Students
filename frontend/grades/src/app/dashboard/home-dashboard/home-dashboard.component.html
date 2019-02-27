@@ -1,3 +1,25 @@
-<p>
-  home-dashboard works!
-</p>
+
+<div class="schedule-container">
+    <table id="mainTable">
+        <thead id="thead">
+            <th><button class="btn btn-primary">Hour</button></th>
+            <th><button class="btn btn-primary">Mon</button></th>
+            <th><button class="btn btn-primary">Tue</button></th>
+            <th><button class="btn btn-primary">Wed</button></th>
+            <th><button class="btn btn-primary">Thu</button></th>
+            <th><button class="btn btn-primary">Fri</button></th>
+        </thead>
+        <tbody id="tbody">
+            <tr *ngFor="let c of classes">
+              <td><span>{{c.starts}}</span></td>
+              <td><span *ngIf="c.Mon">{{c.name}}</span></td>
+              <td><span *ngIf="c.Tue">{{c.name}}</span></td>
+              <td><span *ngIf="c.Wed">{{c.name}}</span></td>
+              <td><span *ngIf="c.Thu">{{c.name}}</span></td>
+              <td><span *ngIf="c.Fri">{{c.name}}</span></td>
+            </tr>
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+</div>

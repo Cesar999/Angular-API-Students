@@ -22,4 +22,8 @@
     <a class="link-register" routerLink="/register" routerLinkActive="active">Register</a>
   </form>
 </div>
+<hr>
+<div *ngIf="message!==''" [ngClass]="(message=='Succesfully Login')?'colorBlue message':'colorRed message'">
+  <span>{{message}}</span>
+</div>
 

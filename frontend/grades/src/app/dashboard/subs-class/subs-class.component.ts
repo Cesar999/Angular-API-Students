@@ -51,6 +51,7 @@ export class SubsClassComponent implements OnInit {
     .subscribe(
       (response) => {
          console.log(response);
+         this.subsClassForm.reset();
       },
       (error) => console.log(error)
     );

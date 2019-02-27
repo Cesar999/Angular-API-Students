@@ -1,0 +1,25 @@
+.schedule-container{
+  width: 80%;
+  margin: 3% auto;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 4%;
+  min-width: 815px;
+}
+
+td {
+  background-color: rgb(163, 197, 228);
+  padding: 2%;
+}
+
+table{
+  width: 100%;
+  border-spacing: 5px;
+  border-collapse: separate;
+  text-align: center;
+  padding: 2%;
+}
+
+table button{
+  width: 100%;
+}
+

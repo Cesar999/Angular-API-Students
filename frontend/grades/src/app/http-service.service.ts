@@ -51,4 +51,16 @@ export class HttpServiceService {
     return this.http.get('http://localhost:3001/get-grades', {withCredentials: true});
   }
 
+  getProfClasses() {
+    return this.http.get('http://localhost:3001/get-prof-classes', {withCredentials: true});
+  }
+
+  setGrade(obj) {
+    return this.http.post('http://localhost:3001/set-grade', obj, {withCredentials: true});
+  }
+
+  getSchedule() {
+    return this.http.get('http://localhost:3001/get-schedule', {withCredentials: true});
+  }
+
 }

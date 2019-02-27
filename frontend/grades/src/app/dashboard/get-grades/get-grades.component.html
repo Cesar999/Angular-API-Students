@@ -1,11 +1,9 @@
-<p>
-  get-grades works!
-</p>
-<div>
+
+<div class="grades-container">
     <table id="mainTable">
         <thead id="thead">
-            <th><button id="sortName">Name</button></th>
-            <th><button id="sortType">Grade</button></th>
+            <th><button class="btn btn-primary">Name</button></th>
+            <th><button class="btn btn-primary">Grade</button></th>
         </thead>
         <tbody id="tbody">
             <tr *ngFor="let c of classes">

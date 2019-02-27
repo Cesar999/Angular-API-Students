@@ -1,6 +1,8 @@
 
 <div class="create-class-form">
+
   <h1>Create Class</h1>
+
   <form [formGroup]="createClassForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Name</label>
@@ -31,7 +33,7 @@
     </div>
 
     <div class="form-group">
-      <label for="days">Choose Week's Days</label>
+      <label for="days">Choose Week's Days</label> &nbsp;
       <select id="days" formControlName="days">
         <option *ngFor="let d of days" [value]="d">{{d}}</option>
       </select>
@@ -50,5 +52,8 @@
 
 
     <button class="btn btn-primary" type="submit">Submit</button>
+    <span *ngIf="message!==''" [ngClass]="(message=='Class saved')?'colorBlue message':'colorRed message'">
+        <span>{{message}}</span>
+    </span>
   </form>
 </div>

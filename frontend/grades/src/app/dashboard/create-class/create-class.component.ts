@@ -9,8 +9,8 @@ import { HttpServiceService } from 'src/app/http-service.service';
 })
 export class CreateClassComponent implements OnInit {
   createClassForm: FormGroup;
-  days = ['Mon-Wed-Fri', 'Tue-Thu', 'Mon-Tue-Wed-Thu-Fri'];
-
+  days = ['Mon-Wed-Fri', 'Tue-Thu'];
+  message = '';
   constructor(private httpService: HttpServiceService) { }
 
   ngOnInit() {
@@ -29,6 +29,16 @@ export class CreateClassComponent implements OnInit {
     .subscribe(
       (response) => {
          console.log(response);
+         this.createClassForm.reset();
+
+         if (response.msg) {
+          this.message = response.msg;
+          setTimeout(() => {
+            this.message = '';
+          }, 2000);
+
+        }
+
       },
       (error) => console.log(error)
     );

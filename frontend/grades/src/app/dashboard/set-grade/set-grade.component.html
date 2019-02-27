@@ -1,3 +1,36 @@
-<p>
-  set-grade works!
-</p>
+
+<div class="set-grade-form">
+  <h1>Set Grade</h1>
+  <form [formGroup]="setGradeForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="class">Choose Class</label> &nbsp;
+      <select id="class" formControlName="class" (change)="populateCard()">
+        <option *ngFor="let c of classes" [value]="c._id">{{c.name}}</option>
+      </select>
+      <hr>
+      <span>{{cardName}} - {{cardStarts}}:{{cardEnds}}</span>
+      <hr>
+    </div>
+
+    <div class="form-group">
+      <label for="class">Choose Student</label> &nbsp;
+      <select id="student" formControlName="student">
+        <option *ngFor="let s of students" [value]="s._id">{{s.username}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="grade">Grade</label>
+      <input
+        type="number"
+        id="grade"
+        class="form-control"
+        min="0" max="10"
+        formControlName="grade"
+      >
+    </div>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+</div>

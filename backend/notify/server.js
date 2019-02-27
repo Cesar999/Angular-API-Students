@@ -86,11 +86,11 @@ app.post('/secret', (req, res) => {
     fetch(`http://localhost:3000/secret-${req.body.type}`, opts)
     .then(res => res.text())
     .then(json => {
-        console.log(json);
+        //console.log(json);
       res.send(json);
     })
     .catch((e)=>{
-        console.log(e);
+        //console.log(e);
     });
 });
 
@@ -140,13 +140,34 @@ function validatePofessor(req, res, next){
 }
 
 app.post('/create-class',validatePofessor,(req, res) => {
-    //console.log(req.body);
     const class1 = new Class({...req.body});
+    let class_id;
     class1.professor = mongoose.Types.ObjectId(class1.professor);
-    class1.save()
+    Class.find({$and: [ {starts: {$in: [class1.starts]}}, {days: {$in: [class1.days]}} ]})
+    .then((cs)=>{
+        if(cs.length<1){
+            return class1.save();;
+        } else {
+            return null;
+        }
+    })
+    .then((c)=>{
+        class_id = mongoose.Types.ObjectId(c._id);
+        return Professor.findOne({_id: class1.professor});
+    })
+    .then((p)=>{
+        //console.log(p);
+        let arr = p.classes;
+        arr.push(class_id);
+        return Professor.findOneAndUpdate({_id: class1.professor }, { $set: {'classes': arr}});
+    })
     .then((u)=>{
         //console.log(u);
         res.send({msg: 'Class saved'});
+    })
+    .catch((e)=>{
+        //console.log(e);
+        res.send({msg: 'Class Not saved'});
     });
 });
 
@@ -245,7 +266,69 @@ app.get('/get-grades',validateStudent,(req, res) => {
         model: 'Class'
       })
     .then((c=>{
-        console.log(c.classes);
+        //console.log(c.classes);
         res.send(c.classes)
     }))
+    .catch((e)=>{
+        console.log(e);
+    })
+});
+
+app.get('/get-prof-classes',validatePofessor,(req, res) => {
+    const professor_id = req.body.professor;
+    Class.find({professor: {$in: [professor_id]}})
+    .select('students name starts ends')
+    .populate({
+        path: 'students',
+        select: 'username classes',
+        model: 'Student',
+        populate:{
+            path: 'classes.class',
+            select: 'name -_id',
+            model: 'Class'
+        }
+      })
+    .then((arr)=>{
+        //console.log(arr);
+        res.send({msg: arr});
+    })
+    .catch((e)=>{
+        console.log(e);
+    })
+});
+
+app.post('/set-grade',validatePofessor,(req, res) => {
+    let temp = {
+        grade: req.body.grade,
+        class: req.body.class
+    }
+    let class_arr = [];
+    Student.findOne({_id: req.body.student})
+    .then((s)=>{
+        for(const c of s.classes){
+            if(c.class.toString() === req.body.class.toString()){
+                class_arr.push(temp);
+            } else {
+                class_arr.push(c);
+            }
+        }
+        return Student.findOneAndUpdate({_id: req.body.student }, { $set: {'classes': class_arr}});
+    })
+    .then((st)=>{
+        res.send({msg: 'Grade set'});
+    })
+    .catch((e)=>{
+        console.log(e);
+    })
+});
+
+app.get('/get-schedule',validatePofessor,(req, res) => {
+    const professor_id = req.body.professor;
+    Class.find({professor:{$in:req.body.professor}})
+    .then((c)=>{
+        res.send({msg: c});
+    })
+    .catch((e)=>{
+        console.log(e);
+    })
 });

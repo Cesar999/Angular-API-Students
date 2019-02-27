@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  message = '';
   loginForm: FormGroup;
   constructor(
     private httpService: HttpServiceService,
@@ -31,9 +32,19 @@ export class LoginComponent implements OnInit {
     this.httpService.postLogin(this.loginForm.value)
     .subscribe(
       (response) => {
-        // console.log(response);
+        console.log(response);
+        if (response.msg) {
+          this.message = response.msg;
+        }
+
         if (response['flag']) {
-          this.authService.toAuthenticate(response['type']);
+          setTimeout(() => {
+            this.authService.toAuthenticate(response['type']);
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            this.message = '';
+          }, 2000);
         }
       },
       (error) => console.log(error)

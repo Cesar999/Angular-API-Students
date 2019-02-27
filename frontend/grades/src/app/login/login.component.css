@@ -7,3 +7,21 @@
   float: right;
 }
 
+.message{
+  width: 60%;
+  margin: 5% auto;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.colorBlue{
+  border: 2px solid #007bff;
+  color: #007bff
+}
+
+.colorRed{
+  border: 2px solid red;
+  color: red;
+}

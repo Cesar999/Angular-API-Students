@@ -1,4 +1,33 @@
 .create-class-form{
   width: 60%;
-  margin: 5% auto;
+  margin: 3% auto;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 4%;
+}
+
+h1{
+  display: inline;
+}
+
+.message{
+  float: right;
+  width: 50%;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.colorBlue{
+  border: 2px solid #007bff;
+  color: #007bff
+}
+
+.colorRed{
+  border: 2px solid red;
+  color: red;
+}
+
+.block{
+  display: block;
 }
