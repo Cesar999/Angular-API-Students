@@ -23,3 +23,10 @@ table button{
   width: 100%;
 }
 
+.name{
+  font-size: 1.2rem;
+}
+
+.prof{
+  font-size: 0.8rem;
+}

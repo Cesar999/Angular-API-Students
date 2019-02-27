@@ -1,15 +1,24 @@
-
+<div class="container">
   <nav *ngIf="isProfessor" class="dashboard nav">
     <a routerLink="./home-dash" routerLinkActive="active">Home</a>&nbsp;
+
     <a routerLink="./create-class" routerLinkActive="active">Create a Class</a>&nbsp;
+
     <a routerLink="./set-grade" routerLinkActive="active">Set a Grade</a>&nbsp;
+
+    <button class="btn btn-danger logout" type="submit" (click)="logOut()">Log Out</button>
   </nav>
 
   <nav *ngIf="isStudent" class="dashboard nav">
       <a routerLink="./home-dash" routerLinkActive="active">Home</a>&nbsp;
+
       <a routerLink="./subs-class" routerLinkActive="active">Subscribe  Class</a>&nbsp;
+
       <a routerLink="./get-grades" routerLinkActive="active">Get Grades</a>&nbsp;
-    </nav>
+    <button class="btn btn-danger logout" type="submit" (click)="logOut()">Log Out</button>
+  </nav>
+
+</div>
   <hr>
   <router-outlet></router-outlet>
 

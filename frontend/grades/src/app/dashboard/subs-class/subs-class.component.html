@@ -42,5 +42,9 @@
       </div>
       <br>
       <button class="btn btn-primary" type="submit">Submit</button>
+      <span *ngIf="message!==''" [ngClass]="(message=='Subscription Succesfully')?'colorBlue message':'colorRed message'">
+          <span>{{message}}</span>
+      </span>
     </form>
   </div>
+

@@ -24,3 +24,15 @@ nav a.active{
   background-color: white;
 
 }
+
+.logout{
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.container{
+  width: 80%;
+  position: relative;
+}

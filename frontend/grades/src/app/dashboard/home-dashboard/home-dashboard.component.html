@@ -12,11 +12,47 @@
         <tbody id="tbody">
             <tr *ngFor="let c of classes">
               <td><span>{{c.starts}}</span></td>
-              <td><span *ngIf="c.Mon">{{c.name}}</span></td>
-              <td><span *ngIf="c.Tue">{{c.name}}</span></td>
-              <td><span *ngIf="c.Wed">{{c.name}}</span></td>
-              <td><span *ngIf="c.Thu">{{c.name}}</span></td>
-              <td><span *ngIf="c.Fri">{{c.name}}</span></td>
+
+              <td>
+                <span *ngIf="c.Mon">
+                    <div class="name">{{c.name}}</div>
+                    <div *ngIf="c.professor.username"
+                    class="prof">Prof. {{c.professor.username}}</div>
+                </span>
+              </td>
+
+              <td>
+                <span *ngIf="c.Tue">
+                    <div class="name">{{c.name}}</div>
+                    <div *ngIf="c.professor.username"
+                    class="prof">Prof. {{c.professor.username}}</div>
+                </span>
+              </td>
+
+              <td>
+                <span *ngIf="c.Wed">
+                    <div class="name">{{c.name}}</div>
+                    <div *ngIf="c.professor.username"
+                    class="prof">Prof. {{c.professor.username}}</div>
+                </span>
+              </td>
+
+              <td>
+                <span *ngIf="c.Thu">
+                    <div class="name">{{c.name}}</div>
+                    <div *ngIf="c.professor.username"
+                    class="prof">Prof. {{c.professor.username}}</div>
+                </span>
+              </td>
+
+              <td>
+                <span *ngIf="c.Fri">
+                    <div class="name">{{c.name}}</div>
+                    <div *ngIf="c.professor.username"
+                    class="prof">Prof. {{c.professor.username}}</div>
+                </span>
+              </td>
+
             </tr>
         </tbody>
         <tfoot>

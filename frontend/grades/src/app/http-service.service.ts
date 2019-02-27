@@ -30,6 +30,11 @@ export class HttpServiceService {
     return this.http.post('http://localhost:3000/register', user);
   }
 
+  deleteCookie() {
+    return this.http.get('http://localhost:3000/delete-cookie', {withCredentials: true});
+ }
+
+
   getSecret(type) {
     return this.http.post('http://localhost:3001/secret', {type},
     {withCredentials: true});
@@ -62,5 +67,10 @@ export class HttpServiceService {
   getSchedule() {
     return this.http.get('http://localhost:3001/get-schedule', {withCredentials: true});
   }
+
+  getScheduleStudent() {
+    return this.http.get('http://localhost:3001/get-schedule-student', {withCredentials: true});
+  }
+
 
 }

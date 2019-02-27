@@ -143,7 +143,7 @@ app.post('/create-class',validatePofessor,(req, res) => {
     const class1 = new Class({...req.body});
     let class_id;
     class1.professor = mongoose.Types.ObjectId(class1.professor);
-    Class.find({$and: [ {starts: {$in: [class1.starts]}}, {days: {$in: [class1.days]}} ]})
+    Class.find({$and: [ {professor: {$in: [class1.professor]}}, {starts: {$in: [class1.starts]}}, {days: {$in: [class1.days]}} ]})
     .then((cs)=>{
         if(cs.length<1){
             return class1.save();;
@@ -205,6 +205,17 @@ app.post('/subs-class',validateStudent,(req, res) => {
     let arr_classes = [];
 
     let msg = "Subscription Succesfully";
+    
+//----------------------------------------------------------
+// Class.find({$and: [ {student: {$in: [c.students]}}, {starts: {$in: [c.starts]}}, {days: {$in: [c.days]}} ]})
+// .then((cs)=>{
+//     if(cs.length<1){
+//         return class1.save();;
+//     } else {
+//         return null;
+//     }
+// })
+//----------------------------------------------------------
 
     Class.findOne({_id: class_id })
     .then((c)=>{
@@ -325,6 +336,22 @@ app.post('/set-grade',validatePofessor,(req, res) => {
 app.get('/get-schedule',validatePofessor,(req, res) => {
     const professor_id = req.body.professor;
     Class.find({professor:{$in:req.body.professor}})
+    .then((c)=>{
+        res.send({msg: c});
+    })
+    .catch((e)=>{
+        console.log(e);
+    })
+});
+
+app.get('/get-schedule-student',validateStudent,(req, res) => {
+    const student_id = req.body.student;
+    Class.find({students:{$in:req.body.student}})
+    .populate({
+      path: 'professor',
+      select: 'username _id',
+      model: 'Professor'
+    })
     .then((c)=>{
         res.send({msg: c});
     })

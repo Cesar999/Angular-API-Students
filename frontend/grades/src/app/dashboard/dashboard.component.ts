@@ -35,4 +35,16 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  logOut() {
+    this.httpService.deleteCookie()
+    .subscribe(
+      (response) => {
+        console.log(response);
+        this.router.navigate(['/login']);
+      },
+      (error) => console.log(error)
+    );
+
+  }
+
 }

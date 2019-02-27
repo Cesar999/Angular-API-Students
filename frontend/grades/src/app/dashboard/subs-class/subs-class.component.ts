@@ -20,7 +20,7 @@ interface Classy {
 export class SubsClassComponent implements OnInit {
   classes = [];
   subsClassForm: FormGroup;
-
+  message = '';
   cardName: String;
   cardStarts: Number;
   cardEnds: Number;
@@ -52,6 +52,11 @@ export class SubsClassComponent implements OnInit {
       (response) => {
          console.log(response);
          this.subsClassForm.reset();
+         if (response.msg) {
+          this.message = response.msg;
+          setTimeout(() => {
+            this.message = '';
+          }, 2000);
       },
       (error) => console.log(error)
     );

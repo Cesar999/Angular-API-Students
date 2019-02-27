@@ -184,3 +184,8 @@ app.get('/secret-professor', passport.authenticate('professor', {session: false}
   console.log(req.user);
   res.send({message: `Success! Professor!`, validate: true, type: req.user.type, user: req.user._id});
 });
+
+app.get('/delete-cookie', (req, res) => {
+  res.cookie('token', '', { maxAge: 0, httpOnly: true });
+  res.send({msg: 'Succesfully Deleted'});
+});
