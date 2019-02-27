@@ -207,17 +207,19 @@ app.post('/subs-class',validateStudent,(req, res) => {
     let msg = "Subscription Succesfully";
     
 //----------------------------------------------------------
-// Class.find({$and: [ {student: {$in: [c.students]}}, {starts: {$in: [c.starts]}}, {days: {$in: [c.days]}} ]})
-// .then((cs)=>{
-//     if(cs.length<1){
-//         return class1.save();;
-//     } else {
-//         return null;
-//     }
-// })
-//----------------------------------------------------------
-
     Class.findOne({_id: class_id })
+    .then((c)=>{
+        //console.log(c);
+        return Class.find({$and: [{starts: {$in: [c.starts]}}, {days: {$in: [c.days]}} ]})
+    })
+    .then((cs)=>{
+        //console.log(cs);
+        if(cs.length<1){
+            return Class.findOne({_id: class_id });
+        } else {
+            return null;
+        }
+    })
     .then((c)=>{
       arr_students = c.students;
       if(arr_students.indexOf(student_id)===-1){
@@ -248,7 +250,10 @@ app.post('/subs-class',validateStudent,(req, res) => {
     .then(()=>{
       res.send({msg:msg});
     })
-    .catch((e)=>console.log(''));
+    .catch((e)=>{
+        console.log('Error');
+        res.send({msg:'Overlapping Class'});
+    });
 });
 
 
