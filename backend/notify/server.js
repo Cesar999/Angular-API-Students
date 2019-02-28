@@ -6,18 +6,22 @@ const cookieParser = require('cookie-parser');
 
 const fetch = require('node-fetch');
 
-//Express
-const app = express();
-const port = process.env.PORT || 3001;
-app.listen(port,()=>{
-    console.log(`Listening port ${port} Notify`);
-});
-
-app.use(bodyParser.json());
-app.use(cookieParser());
+// const urls = require('../../urls_const'); //LOCALHOST
+const urls = require('./urls_const'); //Docker
 
 //Mongoose
-mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-notify', { useNewUrlParser: true });
+const connectWithRetry = function() {
+    return mongoose.connect(urls.url_mongo_notify+'/grades-notify', { useNewUrlParser: true },
+    function(err) {
+      if (err) {
+        console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+        setTimeout(connectWithRetry, 5000);
+      }
+    });
+  };
+  
+  connectWithRetry();
+
 const Schema = mongoose.Schema;
 
 const studentSchema = new Schema({
@@ -67,9 +71,21 @@ const Student = mongoose.model('Student',studentSchema);
 const Professor = mongoose.model('Professor',professorSchema);
 const Class = mongoose.model('Class',classSchema);
 
+//Express
+const app = express();
+const port = process.env.PORT || 3001;
+app.listen(port,()=>{
+    console.log(`Listening port ${port} Notify`);
+});
+
+app.use(bodyParser.json());
+app.use(cookieParser());
+
+//http://localhost:4200
+//http://192.168.99.100:30017
 //Routes
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200, http://192.168.99.100:30017');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -83,7 +99,7 @@ app.post('/secret', (req, res) => {
             cookie: `token=${req.cookies['token']}`
         }
     };
-    fetch(`http://localhost:3000/secret-${req.body.type}`, opts)
+    fetch(urls.url_be_auth + `/secret-${req.body.type}`, opts)
     .then(res => res.text())
     .then(json => {
         //console.log(json);
@@ -121,7 +137,7 @@ function validatePofessor(req, res, next){
         }
     };
     //console.log(req.cookies)
-    fetch(`http://localhost:3000/secret-professor`, opts)
+    fetch(urls.url_be_auth + `/secret-professor`, opts)
     .then(res => res.json())
     .then(json => {
         //console.log(json);
@@ -179,7 +195,7 @@ function validateStudent(req, res, next){
         }
     };
     //console.log(req.cookies)
-    fetch(`http://localhost:3000/secret-student`, opts)
+    fetch(urls.url_be_auth + `/secret-student`, opts)
     .then(res => res.json())
     .then(json => {
         //console.log(json);

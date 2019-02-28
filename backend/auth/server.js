@@ -10,8 +10,21 @@ const passportJWT = require("passport-jwt");
 
 const fetch = require('node-fetch');
 
-//Mongoose
-mongoose.connect(process.env.MONGODB_URI||'mongodb://localhost/grades-auth', { useNewUrlParser: true });
+// const urls = require('../../urls_const'); //LOCALHOST
+const urls = require('./urls_const'); //Docker
+
+const connectWithRetry = function() {
+  return mongoose.connect(urls.url_mongo_auth+'/grades-auth', { useNewUrlParser: true },
+  function(err) {
+    if (err) {
+      console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+      setTimeout(connectWithRetry, 5000);
+    }
+  });
+};
+
+connectWithRetry();
+
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: {type: String, required: true},
@@ -88,7 +101,7 @@ app.use(passport.initialize());
 
 //Functions
 function sendUser(body){
-    fetch('http://localhost:3001/store-user', {
+    fetch(urls.url_be_noty + '/store-user', {
       method: 'post',
       body:    JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' },
@@ -101,10 +114,11 @@ function sendUser(body){
 }
 
 
-
+//http://localhost:4200
+//http://192.168.99.100:30017
 //Routes
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200, http://192.168.99.100:30017');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');

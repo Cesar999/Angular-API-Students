@@ -1,0 +1,67 @@
+***Endpoints*************************
+Backend:
+    - Authentication Server: Auth
+    - Notification Server: Notify
+Frontend:
+    - Angular App    
+***********************************
+
+
+***Components*************************
+-login: login form for the users
+-register: registration form for the users
+-dahsboard: main component that contains the subcomponents
+-dashboard/home: shows user's schedule, has a nav bar with the link routes and                   logout button
+-dashboard/create-class: form where a professor creates a class
+-dashboard/set-grades: form where a professor select a class, a student and then set a                        grade
+-dashboard/get-grades: table where the students is able to see the classes with                        their respective grade
+-dashboard/subs-class: form where a student selects a class an subscribe to it
+***********************************
+
+
+***Routes*************************
+POST: Auth/login
+receives user information to login and returns the token
+
+POST: Auth/register
+receives user information to store in database
+
+GET: Auth/delete-cookie
+deletes the cookie
+
+GET: Notify/secret
+Checks if a user has a valid token
+
+POST: /store-user
+request to auth the users to store
+in the notify database
+
+POST: /create-class
+receives class information, validates as professor type user
+checks if profesor's schedule  is
+avaiable and store new class
+
+POST: /subs-class
+receives class information, validates as student's schedule  type user
+checks if student is
+avaiable and store new class subscription
+
+GET: /load-classes
+return all the classes avaiable to a student
+
+GET: /get-grades
+validates a s and responses with the student's grades
+
+GET: /get-prof-classes
+validates a professor and responses with the professor's classes
+
+POST: /set-grades
+validates a professor and set the grades for a specific student in a specific class
+
+GET: /get-schedule
+validates a professor and returns professor's schedule
+
+GET: /get-student-schedule
+validates a student and returns student's schedule
+
+***********************************
